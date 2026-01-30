@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fluy • Controle Financeiro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ICON -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 14c4-6 10-6 18-2' stroke='%2316a34a' stroke-width='2.5' fill='none'/%3E%3Cpath d='M3 18c4-4 10-4 18 0' stroke='%23facc15' stroke-width='2.5' fill='none'/%3E%3C/svg%3E">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+
+<style>
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.logo-float { animation: float 3s ease-in-out infinite; }
+</style>
+</head>
+
+<body class="bg-gradient-to-br from-green-600 to-yellow-400 min-h-screen flex justify-center transition-colors duration-500">
+
+<!-- SPLASH -->
+<div id="splash" class="fixed inset-0 bg-gradient-to-br from-green-600 to-yellow-400 flex flex-col items-center justify-center text-white z-50">
+  <div class="bg-white rounded-full w-24 h-24 flex items-center justify-center shadow-xl mb-4 logo-float">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+      <path d="M3 14c4-6 10-6 18-2" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M3 18c4-4 10-4 18 0" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <h1 class="text-3xl font-bold">Fluy</h1>
+  <p class="opacity-90 mt-1">Seu dinheiro em movimento</p>
+</div>
+
+<div id="app" class="w-full max-w-md p-4 text-white hidden">
+
+<!-- HEADER -->
+<div class="flex justify-between items-center mb-4">
+  <div class="flex items-center gap-2">
+    <div class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow logo-float">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M3 14c4-6 10-6 18-2" stroke="#16a34a" stroke-width="2.5"/>
+        <path d="M3 18c4-4 10-4 18 0" stroke="#facc15" stroke-width="2.5"/>
+      </svg>
+    </div>
+    <span class="font-bold text-xl">Fluy</span>
+  </div>
+
+  <button onclick="toggleDark()" class="bg-white/20 px-3 py-1 rounded-full text-sm">
+    🌙
+  </button>
+</div>
+
+<!-- SALDO -->
+<div class="bg-white text-black rounded-2xl p-5 shadow-xl mb-4 dark-card">
+<p class="text-sm text-gray-500">Saldo disponível no mês</p>
+<h2 id="balance" class="text-3xl font-bold text-green-600">R$ 0,00</h2>
+
+<div class="flex gap-3 mt-4">
+<button onclick="openModal('income')" class="flex-1 bg-green-600 py-4 rounded-xl text-lg active:scale-95 transition text-white">
++ Receita
+</button>
+<button onclick="openModal('expense')" class="flex-1 bg-red-500 py-4 rounded-xl text-lg active:scale-95 transition text-white">
+- Gasto
+</button>
+</div>
+
+<p id="message" class="mt-3 text-center font-medium"></p>
+</div>
+
+<!-- LIMITE -->
+<div class="bg-white text-black rounded-2xl p-4 shadow mb-4 dark-card">
+<p class="font-semibold mb-2">Limite de Gastos Mensais</p>
+<input id="limitInput" type="number" placeholder="Defina seu limite"
+class="w-full border rounded-xl p-3 mb-3">
+<button onclick="saveLimit()" class="w-full bg-green-600 text-white py-3 rounded-xl">Salvar limite</button>
+
+<div class="mt-4">
+<div class="flex justify-between text-sm mb-1">
+<span>Uso do limite</span>
+<span id="limitPercent">0%</span>
+</div>
+<div class="w-full bg-gray-200 rounded-full h-4">
+<div id="limitBar" class="h-4 rounded-full bg-green-500 transition-all"></div>
+</div>
+<p id="limitStatus" class="text-center font-semibold mt-2"></p>
+</div>
+</div>
+
+</div>
+
+<script>
+/* SPLASH */
+setTimeout(()=>{
+  splash.style.opacity=0;
+  setTimeout(()=>{
+    splash.remove();
+    app.classList.remove("hidden");
+  },500);
+},2000);
+
+/* DARK MODE */
+function toggleDark(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark",document.body.classList.contains("dark"));
+  applyDark();
+}
+
+function applyDark(){
+  if(localStorage.getItem("dark")==="true"){
+    document.body.classList.add("dark");
+    document.body.style.background="linear-gradient(to bottom right,#111,#222)";
+    document.querySelectorAll(".dark-card").forEach(c=>{
+      c.classList.remove("bg-white","text-black");
+      c.classList.add("bg-gray-900","text-white");
+    });
+  }
+}
+applyDark();
+</script>
+
+</body>
+</html>
